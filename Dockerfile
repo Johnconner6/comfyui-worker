@@ -1,6 +1,21 @@
 FROM runpod/worker-comfyui:latest-base
 
-RUN printf 'comfyui:\n    base_path: /runpod-volume/\n    checkpoints: models/checkpoints/\n    clip: models/clip/\n    clip_vision: models/clip_vision/\n    controlnet: models/controlnet/\n    embeddings: models/embeddings/\n    loras: models/loras/\n    upscale_models: models/upscale_models/\n    vae: models/vae/\n    unet: models/unet/\n    diffusion_models: models/diffusion_models/\n    text_encoders: models/text_encoders/\n    audio_encoders: models/audio_encoders/\n' > /comfyui/extra_model_paths.yaml
+RUN cat > /comfyui/extra_model_paths.yaml << 'EOF'
+comfyui:
+    base_path: /runpod-volume/
+    checkpoints: models/checkpoints/
+    clip: models/clip/
+    clip_vision: models/clip_vision/
+    controlnet: models/controlnet/
+    embeddings: models/embeddings/
+    loras: models/loras/
+    upscale_models: models/upscale_models/
+    vae: models/vae/
+    unet: models/unet/
+    diffusion_models: models/diffusion_models/
+    text_encoders: models/text_encoders/
+    audio_encoders: models/audio_encoders/
+EOF
 
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/MoonGoblinDev/Civicomfy.git && \
@@ -11,15 +26,4 @@ RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/city96/ComfyUI-GGUF.git && \
     git clone https://github.com/kijai/ComfyUI-KJNodes.git && \
     git clone https://github.com/MadiatorLabs/ComfyUI-RunpodDirect.git && \
-    git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git && \
-    git clone https://github.com/Smirnov75/ComfyUI-mxtoolkit.git && \
-    git clone https://github.com/cubiq/ComfyUI_essentials.git && \
-    git clone https://github.com/chrisgoringe/cg-use-everywhere.git && \
-    git clone https://github.com/WASasquatch/was-node-suite-comfyui.git && \
-    git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
-    git clone https://github.com/rgthree/rgthree-comfy.git && \
-    git clone https://github.com/PozzettiAndrea/ComfyUI-SAM3.git
-
-RUN for d in /comfyui/custom_nodes/*/; do \
-    [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || true; \
-    done
+    git clone https://github.com/Kosi
