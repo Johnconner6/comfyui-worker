@@ -15,7 +15,8 @@ RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/chrisgoringe/cg-use-everywhere.git && \
     git clone https://github.com/WASasquatch/was-node-suite-comfyui.git && \
     git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
-    git clone https://github.com/rgthree/rgthree-comfy.git
+    git clone https://github.com/rgthree/rgthree-comfy.git && \
+    git clone https://github.com/neverbiasu/ComfyUI-SAM3.git
 
 RUN for d in /comfyui/custom_nodes/*/; do \
     [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || true; \
