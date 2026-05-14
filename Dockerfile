@@ -1,23 +1,8 @@
 FROM runpod/worker-comfyui:latest-base
 
-RUN python3 -c "
-content = '''comfyui:
-    base_path: /runpod-volume/
-    checkpoints: models/checkpoints/
-    clip: models/clip/
-    clip_vision: models/clip_vision/
-    controlnet: models/controlnet/
-    embeddings: models/embeddings/
-    loras: models/loras/
-    upscale_models: models/upscale_models/
-    vae: models/vae/
-    unet: models/unet/
-    diffusion_models: models/diffusion_models/
-    text_encoders: models/text_encoders/
-    audio_encoders: models/audio_encoders/
-'''
-open('/comfyui/extra_model_paths.yaml', 'w').write(content)
-"
+RUN ln -sfn /runpod-volume/models /comfyui/models
+
+RUN echo '#!/bin/bash\necho "=== VOLUME CHECK ==="\nls -la /runpod-volume 2>/dev/null || echo "runpod-volume NOT mounted"\nls -la /runpod-volume/models 2>/dev/null || echo "models dir NOT found"\necho "=== END VOLUME CHECK ==="' > /volume-check.sh && chmod +x /volume-check.sh && echo '/volume-check.sh' >> /start.sh
 
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/MoonGoblinDev/Civicomfy.git && \
