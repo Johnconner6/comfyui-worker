@@ -20,5 +20,4 @@ RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/rgthree/rgthree-comfy.git && \
     git clone https://github.com/PozzettiAndrea/ComfyUI-SAM3.git
 
-RUN for d in /comfyui/custom_nodes/*/; do \
-    [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || tr
+RUN find /comfyui/custom_nodes -name requirements.txt | xargs -I{} pip install -r {} -q
