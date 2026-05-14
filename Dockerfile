@@ -1,8 +1,6 @@
 FROM runpod/worker-comfyui:latest-base
 
-RUN ln -sfn /runpod-volume/models /comfyui/models
-
-RUN echo '#!/bin/bash\necho "=== VOLUME CHECK ==="\nls -la /runpod-volume 2>/dev/null || echo "runpod-volume NOT mounted"\nls -la /runpod-volume/models 2>/dev/null || echo "models dir NOT found"\necho "=== END VOLUME CHECK ==="' > /volume-check.sh && chmod +x /volume-check.sh && echo '/volume-check.sh' >> /start.sh
+RUN rm -rf /comfyui/models && ln -s /runpod-volume/models /comfyui/models
 
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/MoonGoblinDev/Civicomfy.git && \
@@ -23,5 +21,4 @@ RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/PozzettiAndrea/ComfyUI-SAM3.git
 
 RUN for d in /comfyui/custom_nodes/*/; do \
-    [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || true; \
-    done
+    [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || tr
