@@ -1,7 +1,7 @@
 FROM runpod/worker-comfyui:latest-base
 
-RUN cat > /comfyui/extra_model_paths.yaml << 'EOF'
-comfyui:
+RUN python3 -c "
+content = '''comfyui:
     base_path: /runpod-volume/
     checkpoints: models/checkpoints/
     clip: models/clip/
@@ -15,7 +15,9 @@ comfyui:
     diffusion_models: models/diffusion_models/
     text_encoders: models/text_encoders/
     audio_encoders: models/audio_encoders/
-EOF
+'''
+open('/comfyui/extra_model_paths.yaml', 'w').write(content)
+"
 
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/MoonGoblinDev/Civicomfy.git && \
@@ -26,4 +28,15 @@ RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/city96/ComfyUI-GGUF.git && \
     git clone https://github.com/kijai/ComfyUI-KJNodes.git && \
     git clone https://github.com/MadiatorLabs/ComfyUI-RunpodDirect.git && \
-    git clone https://github.com/Kosi
+    git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git && \
+    git clone https://github.com/Smirnov75/ComfyUI-mxtoolkit.git && \
+    git clone https://github.com/cubiq/ComfyUI_essentials.git && \
+    git clone https://github.com/chrisgoringe/cg-use-everywhere.git && \
+    git clone https://github.com/WASasquatch/was-node-suite-comfyui.git && \
+    git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
+    git clone https://github.com/rgthree/rgthree-comfy.git && \
+    git clone https://github.com/PozzettiAndrea/ComfyUI-SAM3.git
+
+RUN for d in /comfyui/custom_nodes/*/; do \
+    [ -f "$d/requirements.txt" ] && pip install -r "$d/requirements.txt" -q || true; \
+    done
